@@ -32,6 +32,59 @@ struct SettingsWindowView: View {
                 Text("更新設定")
             }
 
+            // Subscription Plan
+            Section {
+                Picker("訂閱方案", selection: $viewModel.subscriptionPlan) {
+                    ForEach(SubscriptionPlan.allCases, id: \.self) { plan in
+                        HStack {
+                            Text(plan.displayName)
+                            if plan.monthlyPrice > 0 {
+                                Text("$\(plan.monthlyPrice as NSDecimalNumber)/月")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .tag(plan)
+                    }
+                }
+
+                HStack {
+                    Text("預估日額")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("$\(viewModel.subscriptionPlan.estimatedDailyBudget as NSDecimalNumber)/日")
+                        .foregroundColor(viewModel.subscriptionPlan.color)
+                        .fontWeight(.medium)
+                }
+                .font(.caption)
+
+                Text("環形圖依據方案估算的每日 API 等值額度顯示使用率")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } header: {
+                Text("訂閱方案")
+            }
+
+            // Budget Settings
+            Section {
+                HStack {
+                    Text("月額預算上限")
+                    Spacer()
+                    TextField(
+                        "$",
+                        value: $viewModel.monthlySpendingLimit,
+                        format: .currency(code: "USD")
+                    )
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 120)
+                    .multilineTextAlignment(.trailing)
+                }
+                Text("對應 Claude 訂閱的 Extra Usage 月額上限")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } header: {
+                Text("額外用量")
+            }
+
             // Display Options
             Section {
                 Picker("時間粒度", selection: $viewModel.selectedTimeGranularity) {
@@ -61,7 +114,7 @@ struct SettingsWindowView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 450, height: 350)
+        .frame(width: 450, height: 560)
         .alert("錯誤", isPresented: $viewModel.showError) {
             Button("確定") {
                 viewModel.showError = false

@@ -25,7 +25,7 @@ struct MenuBarContentView: View {
                 ErrorView(error: error)
             } else if let usage = viewModel.currentUsage {
                 // Usage metrics with fade-in
-                UsageSection(usage: usage)
+                UsageSection(usage: usage, monthlySpendingLimit: viewModel.monthlySpendingLimit, plan: viewModel.subscriptionPlan)
                     .opacity(contentAppeared ? 1 : 0)
                     .offset(y: contentAppeared ? 0 : 8)
                 Divider()
@@ -131,6 +131,8 @@ struct StatusView: View {
 @available(macOS 14.0, *)
 struct UsageSection: View {
     let usage: UsageMetrics
+    let monthlySpendingLimit: Decimal
+    let plan: SubscriptionPlan
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -140,7 +142,8 @@ struct UsageSection: View {
                 .foregroundColor(.secondary)
 
             TokenUsageCard(breakdown: usage.tokenBreakdown)
-            CostDisplayCard(cost: usage.estimatedCost)
+            CostDisplayCard(cost: usage.estimatedCost, plan: plan)
+            ExtraUsageCard(dailyCost: usage.estimatedCost, monthlySpendingLimit: monthlySpendingLimit, plan: plan)
 
             // Model breakdown
             if usage.modelBreakdown.count > 1 {

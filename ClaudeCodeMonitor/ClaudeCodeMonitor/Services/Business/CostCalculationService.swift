@@ -1,44 +1,97 @@
 import Foundation
 
-/// Model pricing structure
+/// Model pricing structure (per million tokens)
+/// Cache pricing uses 5-minute TTL (Claude Code default):
+///   - Cache write = 1.25 × input price
+///   - Cache read  = 0.1  × input price
 struct ModelPricing {
-    let inputPerMTok: Decimal  // Per million tokens
+    let inputPerMTok: Decimal
     let outputPerMTok: Decimal
     let cacheWritePerMTok: Decimal
     let cacheReadPerMTok: Decimal
 }
 
-/// Service for calculating API costs
+/// Service for calculating API costs (= Extra Usage rates for paid plans)
+/// Pricing source: https://platform.claude.com/docs/en/about-claude/pricing
 @available(macOS 14.0, *)
 final class CostCalculationService {
-    // Pricing as of February 2026 (per million tokens)
+    // Official API pricing as of February 2026 (per million tokens)
+    // Extra usage for Pro/Max plans is billed at these same standard API rates
     private let pricingTable: [String: ModelPricing] = [
+        // Opus 4.6 — $5 input, $25 output
         "claude-opus-4-6": ModelPricing(
+            inputPerMTok: 5.00,
+            outputPerMTok: 25.00,
+            cacheWritePerMTok: 6.25,    // 5 × 1.25
+            cacheReadPerMTok: 0.50      // 5 × 0.1
+        ),
+        // Opus 4.5 — $5 input, $25 output
+        "claude-opus-4-5": ModelPricing(
+            inputPerMTok: 5.00,
+            outputPerMTok: 25.00,
+            cacheWritePerMTok: 6.25,
+            cacheReadPerMTok: 0.50
+        ),
+        // Opus 4.1 — $15 input, $75 output (legacy tier)
+        "claude-opus-4-1": ModelPricing(
+            inputPerMTok: 15.00,
+            outputPerMTok: 75.00,
+            cacheWritePerMTok: 18.75,   // 15 × 1.25
+            cacheReadPerMTok: 1.50      // 15 × 0.1
+        ),
+        // Opus 4 — $15 input, $75 output (legacy tier)
+        "claude-opus-4": ModelPricing(
             inputPerMTok: 15.00,
             outputPerMTok: 75.00,
             cacheWritePerMTok: 18.75,
             cacheReadPerMTok: 1.50
         ),
+        // Sonnet 4.5 — $3 input, $15 output
         "claude-sonnet-4-5": ModelPricing(
+            inputPerMTok: 3.00,
+            outputPerMTok: 15.00,
+            cacheWritePerMTok: 3.75,    // 3 × 1.25
+            cacheReadPerMTok: 0.30      // 3 × 0.1
+        ),
+        // Sonnet 4 — $3 input, $15 output
+        "claude-sonnet-4": ModelPricing(
             inputPerMTok: 3.00,
             outputPerMTok: 15.00,
             cacheWritePerMTok: 3.75,
             cacheReadPerMTok: 0.30
         ),
+        // Haiku 4.5 — $1 input, $5 output
         "claude-haiku-4-5": ModelPricing(
+            inputPerMTok: 1.00,
+            outputPerMTok: 5.00,
+            cacheWritePerMTok: 1.25,    // 1 × 1.25
+            cacheReadPerMTok: 0.10      // 1 × 0.1
+        ),
+        // Haiku 3.5 — $0.80 input, $4 output (legacy)
+        "claude-haiku-3-5": ModelPricing(
             inputPerMTok: 0.80,
             outputPerMTok: 4.00,
-            cacheWritePerMTok: 1.00,
-            cacheReadPerMTok: 0.08
-        )
+            cacheWritePerMTok: 1.00,    // 0.80 × 1.25
+            cacheReadPerMTok: 0.08      // 0.80 × 0.1
+        ),
     ]
+
+    /// Resolve pricing for a model name, falling back to Sonnet 4.5 for unknown models
+    private func resolvePricing(for model: String) -> ModelPricing {
+        if let exact = pricingTable[model] {
+            return exact
+        }
+        // Prefix match for model variants (e.g. "claude-opus-4-6-fast")
+        for (key, pricing) in pricingTable where model.hasPrefix(key) {
+            return pricing
+        }
+        // Fallback to Sonnet 4.5
+        return pricingTable["claude-sonnet-4-5"]!
+    }
 
     /// Calculate cost for given model and tokens
     func calculateCost(model: String, tokens: TokenBreakdown) -> Decimal {
-        guard let pricing = pricingTable[model] else {
-            // Unknown model - use average pricing
-            return calculateCost(model: "claude-sonnet-4-5", tokens: tokens)
-        }
+        let pricing = resolvePricing(for: model)
 
         let inputCost = Decimal(tokens.uncachedInput) * pricing.inputPerMTok / 1_000_000
         let outputCost = Decimal(tokens.output) * pricing.outputPerMTok / 1_000_000

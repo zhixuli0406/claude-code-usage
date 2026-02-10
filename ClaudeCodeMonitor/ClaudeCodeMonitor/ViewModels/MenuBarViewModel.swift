@@ -38,6 +38,14 @@ final class MenuBarViewModel {
         refreshScheduler.isRunning
     }
 
+    var monthlySpendingLimit: Decimal {
+        userDefaultsService.loadConfiguration().monthlySpendingLimit
+    }
+
+    var subscriptionPlan: SubscriptionPlan {
+        userDefaultsService.loadConfiguration().subscriptionPlan
+    }
+
     init(
         usageMonitorService: UsageMonitorService,
         refreshScheduler: RefreshScheduler,

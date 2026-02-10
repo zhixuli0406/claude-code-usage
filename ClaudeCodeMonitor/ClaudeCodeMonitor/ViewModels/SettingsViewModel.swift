@@ -12,6 +12,8 @@ final class SettingsViewModel {
     var showNotifications: Bool = true
     var launchAtLogin: Bool = false
     var selectedTimeGranularity: TimeGranularity = .oneMinute
+    var monthlySpendingLimit: Decimal = 20.0
+    var subscriptionPlan: SubscriptionPlan = .pro
 
     var errorMessage: String?
     var showError = false
@@ -29,6 +31,8 @@ final class SettingsViewModel {
         showNotifications = config.showNotifications
         launchAtLogin = launchAtLoginService.isEnabled
         selectedTimeGranularity = config.selectedTimeGranularity
+        monthlySpendingLimit = config.monthlySpendingLimit
+        subscriptionPlan = config.subscriptionPlan
     }
 
     /// Save settings
@@ -43,6 +47,8 @@ final class SettingsViewModel {
             config.showNotifications = showNotifications
             config.launchAtLogin = launchAtLogin
             config.selectedTimeGranularity = selectedTimeGranularity
+            config.monthlySpendingLimit = monthlySpendingLimit
+            config.subscriptionPlan = subscriptionPlan
 
             userDefaultsService.saveConfiguration(config)
 
