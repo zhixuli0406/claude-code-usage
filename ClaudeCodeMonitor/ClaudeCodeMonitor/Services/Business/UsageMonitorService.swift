@@ -101,18 +101,10 @@ final class UsageMonitorService {
         let weeklyResult = localUsageService.fetchUsage(from: weeklyStart, to: now)
         let nextWeeklyReset = weeklyStart.addingTimeInterval(7 * 24 * 3600)
 
-        // Session: use configured reset date if valid, otherwise fall back to rolling 5h window
-        let sessionResetDate: Date
-        let sessionStart: Date
-        if let configuredReset = config.sessionResetDate, configuredReset > now {
-            // User has set a valid future reset date
-            sessionResetDate = configuredReset
-            sessionStart = configuredReset.addingTimeInterval(-5 * 3600)
-        } else {
-            // No configured date or expired: use rolling 5h window
-            sessionStart = now.addingTimeInterval(-5 * 3600)
-            sessionResetDate = now.addingTimeInterval(5 * 3600)
-        }
+        // Session: user override > auto-detect from gaps > rolling 5h fallback
+        let (sessionStart, sessionResetDate) = resolveSessionWindow(
+            config: config, entries: weeklyResult.entries, now: now
+        )
         let sessionEntries = weeklyResult.entries.filter { $0.timestamp >= sessionStart }
         // Use weighted cost (internal compute rates) for plan limit percentages
         let sessionWeightedCost = computeWeightedCostFromEntries(sessionEntries)
@@ -236,6 +228,47 @@ final class UsageMonitorService {
             calculatedTotal += costCalculationService.calculateCost(model: model, tokens: tokens)
         }
         return cachedCostTotal + calculatedTotal
+    }
+
+    /// Resolve session window: user override > auto-detect from gaps > rolling 5h fallback
+    private func resolveSessionWindow(
+        config: AppConfiguration,
+        entries: [LocalUsageEntry],
+        now: Date
+    ) -> (start: Date, reset: Date) {
+        // 1. User-configured reset date
+        if let configuredReset = config.sessionResetDate, configuredReset > now {
+            return (configuredReset.addingTimeInterval(-5 * 3600), configuredReset)
+        }
+        // 2. Auto-detect session start from entry gaps (>= 5h gap = new session)
+        if let detectedStart = detectSessionStart(from: entries, now: now) {
+            let detectedReset = detectedStart.addingTimeInterval(5 * 3600)
+            if detectedReset > now {
+                return (detectedStart, detectedReset)
+            }
+        }
+        // 3. Fallback: rolling 5h window
+        return (now.addingTimeInterval(-5 * 3600), now.addingTimeInterval(5 * 3600))
+    }
+
+    /// Detect the start of the current session by walking entries forward and finding gaps >= 5h.
+    /// Returns the timestamp of the first entry in the most recent session block, or nil if no entries.
+    private func detectSessionStart(from entries: [LocalUsageEntry], now: Date) -> Date? {
+        // Only consider entries from the last 10 hours (enough for one full session + gap)
+        let cutoff = now.addingTimeInterval(-10 * 3600)
+        let recent = entries.filter { $0.timestamp >= cutoff }
+            .sorted { $0.timestamp < $1.timestamp }
+        guard !recent.isEmpty else { return nil }
+
+        var sessionStart = recent[0].timestamp
+        for i in 1..<recent.count {
+            let gap = recent[i].timestamp.timeIntervalSince(recent[i - 1].timestamp)
+            if gap >= 5 * 3600 {
+                // Gap >= 5h means a new session started at this entry
+                sessionStart = recent[i].timestamp
+            }
+        }
+        return sessionStart
     }
 
     private func computeWeeklyStart(from date: Date, dayOfWeek: Int, hour: Int) -> Date {

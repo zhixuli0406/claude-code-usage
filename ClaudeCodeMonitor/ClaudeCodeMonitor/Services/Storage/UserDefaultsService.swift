@@ -64,11 +64,11 @@ enum SubscriptionPlan: String, Codable, CaseIterable {
     var defaultWeeklyAllModelsBudget: Decimal {
         switch self {
         case .free: return 0
-        case .pro: return 85          // ~$85 per week (compute cost)
-        case .max5x: return 425       // 5× Pro
-        case .max20x: return 1700     // 20× Pro
-        case .team: return 85         // Pro-level
-        case .teamPremium: return 425 // 5× level
+        case .pro: return 95          // ~$95 per week (compute cost)
+        case .max5x: return 475       // 5× Pro
+        case .max20x: return 1900     // 20× Pro
+        case .team: return 95         // Pro-level
+        case .teamPremium: return 475 // 5× level
         }
     }
 
