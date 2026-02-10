@@ -9,6 +9,8 @@ struct LocalUsageEntry {
     let outputTokens: Int
     let cacheCreationInputTokens: Int
     let cacheReadInputTokens: Int
+    let costUSD: Decimal?       // Pre-computed cost from JSONL (costUSD / cost_usd / cost)
+    let deduplicationKey: String // message_id:request_id for deduplication
 }
 
 /// Result of aggregating local usage data
@@ -25,13 +27,20 @@ struct LocalUsageResult {
 final class LocalUsageService {
 
     private let claudeDir: URL
-    private let dateFormatter: ISO8601DateFormatter
+    private let dateFormatters: [ISO8601DateFormatter]
 
     init() {
         self.claudeDir = FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".claude/projects")
-        self.dateFormatter = ISO8601DateFormatter()
-        self.dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        // Support multiple ISO 8601 variants
+        let withFractional = ISO8601DateFormatter()
+        withFractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        let standard = ISO8601DateFormatter()
+        standard.formatOptions = [.withInternetDateTime]
+
+        self.dateFormatters = [withFractional, standard]
     }
 
     /// Read all usage data for a given date range
@@ -53,6 +62,7 @@ final class LocalUsageService {
     private func readAllEntries(from startDate: Date, to endDate: Date) -> [LocalUsageEntry] {
         let fileManager = FileManager.default
         var allEntries: [LocalUsageEntry] = []
+        var seenKeys: Set<String> = []
 
         guard let projectDirs = try? fileManager.contentsOfDirectory(
             at: claudeDir,
@@ -71,7 +81,11 @@ final class LocalUsageService {
             let jsonlFiles = findJSONLFiles(in: projectDir)
             for file in jsonlFiles {
                 let entries = parseJSONLFile(at: file, from: startDate, to: endDate)
-                allEntries.append(contentsOf: entries)
+                for entry in entries {
+                    if seenKeys.insert(entry.deduplicationKey).inserted {
+                        allEntries.append(entry)
+                    }
+                }
             }
 
             // Read subagent JSONL files
@@ -80,7 +94,11 @@ final class LocalUsageService {
                 let subagentFiles = findJSONLFiles(in: subagentsDir)
                 for file in subagentFiles {
                     let entries = parseJSONLFile(at: file, from: startDate, to: endDate)
-                    allEntries.append(contentsOf: entries)
+                    for entry in entries {
+                        if seenKeys.insert(entry.deduplicationKey).inserted {
+                            allEntries.append(entry)
+                        }
+                    }
                 }
             }
         }
@@ -121,21 +139,34 @@ final class LocalUsageService {
                   let lineData = trimmed.data(using: .utf8),
                   let json = try? JSONSerialization.jsonObject(with: lineData) as? [String: Any],
                   let type = json["type"] as? String,
-                  type == "assistant",
-                  let timestampStr = json["timestamp"] as? String,
-                  let timestamp = dateFormatter.date(from: timestampStr),
-                  timestamp >= startDate,
-                  timestamp <= endDate,
-                  let message = json["message"] as? [String: Any],
-                  let usage = message["usage"] as? [String: Any] else {
+                  type == "assistant" else {
                 continue
             }
 
-            let model = (message["model"] as? String) ?? "unknown"
-            let inputTokens = usage["input_tokens"] as? Int ?? 0
-            let outputTokens = usage["output_tokens"] as? Int ?? 0
-            let cacheCreation = usage["cache_creation_input_tokens"] as? Int ?? 0
-            let cacheRead = usage["cache_read_input_tokens"] as? Int ?? 0
+            // Parse timestamp (multiple formats)
+            guard let timestamp = parseTimestamp(from: json),
+                  timestamp >= startDate,
+                  timestamp <= endDate else {
+                continue
+            }
+
+            // Extract token data from multiple possible locations
+            let message = json["message"] as? [String: Any]
+            guard let usage = extractUsage(from: json, message: message) else {
+                continue
+            }
+
+            let model = extractModel(from: json, message: message)
+            let inputTokens = extractInt(from: usage, keys: ["input_tokens", "inputTokens", "prompt_tokens"])
+            let outputTokens = extractInt(from: usage, keys: ["output_tokens", "outputTokens", "completion_tokens"])
+            let cacheCreation = extractInt(from: usage, keys: ["cache_creation_input_tokens", "cache_creation_tokens", "cacheCreationInputTokens"])
+            let cacheRead = extractInt(from: usage, keys: ["cache_read_input_tokens", "cache_read_tokens", "cacheReadInputTokens"])
+
+            // Build deduplication key from message_id + request_id
+            let deduplicationKey = buildDeduplicationKey(from: json, message: message)
+
+            // Extract pre-computed cost if available
+            let costUSD = extractCostUSD(from: json)
 
             entries.append(LocalUsageEntry(
                 timestamp: timestamp,
@@ -144,11 +175,99 @@ final class LocalUsageService {
                 inputTokens: inputTokens,
                 outputTokens: outputTokens,
                 cacheCreationInputTokens: cacheCreation,
-                cacheReadInputTokens: cacheRead
+                cacheReadInputTokens: cacheRead,
+                costUSD: costUSD,
+                deduplicationKey: deduplicationKey
             ))
         }
 
         return entries
+    }
+
+    // MARK: - Token Extraction Helpers
+
+    /// Extract usage dict from multiple possible JSON paths (message.usage > usage > root)
+    private func extractUsage(from json: [String: Any], message: [String: Any]?) -> [String: Any]? {
+        // Priority: message.usage > usage > root-level token keys
+        if let msgUsage = message?["usage"] as? [String: Any] {
+            return msgUsage
+        }
+        if let rootUsage = json["usage"] as? [String: Any] {
+            return rootUsage
+        }
+        // Check if token keys exist at root level
+        if json["input_tokens"] != nil || json["inputTokens"] != nil || json["prompt_tokens"] != nil {
+            return json
+        }
+        return nil
+    }
+
+    /// Extract model name from multiple possible locations
+    private func extractModel(from json: [String: Any], message: [String: Any]?) -> String {
+        if let model = json["model"] as? String { return model }
+        if let model = message?["model"] as? String { return model }
+        return "unknown"
+    }
+
+    /// Extract first matching integer value from multiple possible key names
+    private func extractInt(from dict: [String: Any], keys: [String]) -> Int {
+        for key in keys {
+            if let value = dict[key] as? Int { return value }
+        }
+        return 0
+    }
+
+    /// Parse timestamp from multiple formats
+    private func parseTimestamp(from json: [String: Any]) -> Date? {
+        // Try string timestamp first
+        if let timestampStr = json["timestamp"] as? String {
+            for formatter in dateFormatters {
+                if let date = formatter.date(from: timestampStr) {
+                    return date
+                }
+            }
+            // Try parsing "Z" suffix variant manually
+            let cleaned = timestampStr.replacingOccurrences(of: "Z", with: "+00:00")
+            for formatter in dateFormatters {
+                if let date = formatter.date(from: cleaned) {
+                    return date
+                }
+            }
+        }
+        // Try numeric Unix timestamp (seconds since epoch)
+        if let ts = json["timestamp"] as? Double {
+            return Date(timeIntervalSince1970: ts)
+        }
+        if let ts = json["timestamp"] as? Int {
+            return Date(timeIntervalSince1970: TimeInterval(ts))
+        }
+        return nil
+    }
+
+    /// Build deduplication key from message_id + request_id
+    private func buildDeduplicationKey(from json: [String: Any], message: [String: Any]?) -> String {
+        let messageId = (json["message_id"] as? String)
+            ?? (message?["id"] as? String)
+            ?? UUID().uuidString
+        let requestId = (json["request_id"] as? String)
+            ?? (json["requestId"] as? String)
+            ?? ""
+        return "\(messageId):\(requestId)"
+    }
+
+    /// Extract pre-computed cost from JSONL entry
+    private func extractCostUSD(from json: [String: Any]) -> Decimal? {
+        let keys = ["costUSD", "cost_usd", "cost"]
+        for key in keys {
+            if let value = json[key] as? Double, value > 0 {
+                return Decimal(value)
+            }
+            if let value = json[key] as? NSNumber {
+                let decimal = value.decimalValue
+                if decimal > 0 { return decimal }
+            }
+        }
+        return nil
     }
 
     private func aggregate(entries: [LocalUsageEntry]) -> LocalUsageResult {

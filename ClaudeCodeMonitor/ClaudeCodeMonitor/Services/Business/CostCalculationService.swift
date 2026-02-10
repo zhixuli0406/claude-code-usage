@@ -76,7 +76,8 @@ final class CostCalculationService {
         ),
     ]
 
-    /// Resolve pricing for a model name, falling back to Sonnet 4.5 for unknown models
+    /// Resolve pricing for a model name with multi-level fallback:
+    /// 1. Exact match  2. Prefix match  3. Keyword match  4. Default Sonnet 4.5
     private func resolvePricing(for model: String) -> ModelPricing {
         if let exact = pricingTable[model] {
             return exact
@@ -85,7 +86,15 @@ final class CostCalculationService {
         for (key, pricing) in pricingTable where model.hasPrefix(key) {
             return pricing
         }
-        // Fallback to Sonnet 4.5
+        // Keyword-based fallback (matching reference repo logic)
+        let lowercased = model.lowercased()
+        if lowercased.contains("opus") {
+            return pricingTable["claude-opus-4-6"]!
+        }
+        if lowercased.contains("haiku") {
+            return pricingTable["claude-haiku-4-5"]!
+        }
+        // Default to Sonnet 4.5 for all other unknown models
         return pricingTable["claude-sonnet-4-5"]!
     }
 

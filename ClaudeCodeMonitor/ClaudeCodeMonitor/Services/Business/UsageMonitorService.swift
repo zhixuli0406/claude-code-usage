@@ -33,11 +33,8 @@ final class UsageMonitorService {
         // Read today's usage from local files
         let todayResult = localUsageService.fetchTodayUsage()
 
-        // Calculate cost per model
-        var totalCost: Decimal = 0
-        for (model, breakdown) in todayResult.modelBreakdown {
-            totalCost += costCalculationService.calculateCost(model: model, tokens: breakdown)
-        }
+        // Calculate cost: prefer JSONL costUSD, fall back to token-based calculation
+        let totalCost = computeCostFromEntries(todayResult.entries)
 
         // Build UsageMetrics
         let metrics = UsageMetrics(
@@ -69,10 +66,8 @@ final class UsageMonitorService {
     func loadCachedData() {
         let todayResult = localUsageService.fetchTodayUsage()
 
-        var totalCost: Decimal = 0
-        for (model, breakdown) in todayResult.modelBreakdown {
-            totalCost += costCalculationService.calculateCost(model: model, tokens: breakdown)
-        }
+        // Calculate cost: prefer JSONL costUSD, fall back to token-based calculation
+        let totalCost = computeCostFromEntries(todayResult.entries)
 
         currentUsage = UsageMetrics(
             timestamp: Date(),
@@ -183,16 +178,26 @@ final class UsageMonitorService {
     // MARK: - Helpers
 
     private func computeCost(from result: LocalUsageResult) -> Decimal {
-        var total: Decimal = 0
-        for (model, breakdown) in result.modelBreakdown {
-            total += costCalculationService.calculateCost(model: model, tokens: breakdown)
-        }
-        return total
+        return computeCostFromEntries(result.entries)
     }
 
     private func computeCostFromEntries(_ entries: [LocalUsageEntry]) -> Decimal {
-        var modelBreakdown: [String: TokenBreakdown] = [:]
+        // Prefer pre-computed costUSD from JSONL when available (most accurate),
+        // fall back to token-based calculation per model
+        var cachedCostTotal: Decimal = 0
+        var uncachedEntries: [LocalUsageEntry] = []
+
         for entry in entries {
+            if let cost = entry.costUSD {
+                cachedCostTotal += cost
+            } else {
+                uncachedEntries.append(entry)
+            }
+        }
+
+        // Calculate cost for entries without pre-computed cost
+        var modelBreakdown: [String: TokenBreakdown] = [:]
+        for entry in uncachedEntries {
             let existing = modelBreakdown[entry.model] ?? TokenBreakdown(
                 uncachedInput: 0, cachedInput: 0, cacheCreation: 0, output: 0
             )
@@ -203,11 +208,11 @@ final class UsageMonitorService {
                 output: existing.output + entry.outputTokens
             )
         }
-        var total: Decimal = 0
+        var calculatedTotal: Decimal = 0
         for (model, tokens) in modelBreakdown {
-            total += costCalculationService.calculateCost(model: model, tokens: tokens)
+            calculatedTotal += costCalculationService.calculateCost(model: model, tokens: tokens)
         }
-        return total
+        return cachedCostTotal + calculatedTotal
     }
 
     private func computeWeeklyStart(from date: Date, dayOfWeek: Int, hour: Int) -> Date {
