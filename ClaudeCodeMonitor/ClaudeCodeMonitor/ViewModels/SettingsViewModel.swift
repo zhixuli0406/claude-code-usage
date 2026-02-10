@@ -14,6 +14,8 @@ final class SettingsViewModel {
     var selectedTimeGranularity: TimeGranularity = .oneMinute
     var monthlySpendingLimit: Decimal = 20.0
     var subscriptionPlan: SubscriptionPlan = .pro
+    var weeklyResetDayOfWeek: Int = 3
+    var weeklyResetHour: Int = 8
 
     var errorMessage: String?
     var showError = false
@@ -33,6 +35,8 @@ final class SettingsViewModel {
         selectedTimeGranularity = config.selectedTimeGranularity
         monthlySpendingLimit = config.monthlySpendingLimit
         subscriptionPlan = config.subscriptionPlan
+        weeklyResetDayOfWeek = config.weeklyResetDayOfWeek
+        weeklyResetHour = config.weeklyResetHour
     }
 
     /// Save settings
@@ -49,6 +53,8 @@ final class SettingsViewModel {
             config.selectedTimeGranularity = selectedTimeGranularity
             config.monthlySpendingLimit = monthlySpendingLimit
             config.subscriptionPlan = subscriptionPlan
+            config.weeklyResetDayOfWeek = weeklyResetDayOfWeek
+            config.weeklyResetHour = weeklyResetHour
 
             userDefaultsService.saveConfiguration(config)
 

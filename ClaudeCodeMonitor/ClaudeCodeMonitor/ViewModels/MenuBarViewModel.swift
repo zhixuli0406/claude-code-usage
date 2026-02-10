@@ -46,6 +46,10 @@ final class MenuBarViewModel {
         userDefaultsService.loadConfiguration().subscriptionPlan
     }
 
+    var planUsageLimits: PlanUsageLimits? {
+        usageMonitorService.planUsageLimits
+    }
+
     init(
         usageMonitorService: UsageMonitorService,
         refreshScheduler: RefreshScheduler,

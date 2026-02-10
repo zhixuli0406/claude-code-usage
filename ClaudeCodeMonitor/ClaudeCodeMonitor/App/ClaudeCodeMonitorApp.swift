@@ -15,7 +15,8 @@ struct ClaudeCodeMonitorApp: App {
 
         let usageMonitorService = UsageMonitorService(
             localUsageService: localUsageService,
-            costCalculationService: costCalculationService
+            costCalculationService: costCalculationService,
+            userDefaultsService: userDefaultsService
         )
 
         let refreshScheduler = RefreshScheduler(

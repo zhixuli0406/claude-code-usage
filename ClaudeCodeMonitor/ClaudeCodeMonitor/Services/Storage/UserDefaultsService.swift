@@ -47,6 +47,16 @@ enum SubscriptionPlan: String, Codable, CaseIterable {
         }
     }
 
+    /// Budget for a rolling 5-hour session window
+    var sessionBudget: Decimal {
+        estimatedDailyBudget * 5 / 24
+    }
+
+    /// Budget for a full week (7 days)
+    var weeklyBudget: Decimal {
+        estimatedDailyBudget * 7
+    }
+
     /// Accent color for the plan tier
     var color: Color {
         switch self {
@@ -70,6 +80,8 @@ struct AppConfiguration: Codable {
     var subscriptionPlan: SubscriptionPlan = .pro
     var lastRefreshDate: Date?
     var launchAtLogin: Bool = false
+    var weeklyResetDayOfWeek: Int = 3  // 1=Sun, 2=Mon, 3=Tue, ..., 7=Sat
+    var weeklyResetHour: Int = 8       // 0-23, default 8:00 AM
 }
 
 /// Time granularity for API queries
@@ -102,6 +114,8 @@ final class UserDefaultsService {
         static let subscriptionPlan = "subscriptionPlan"
         static let lastRefreshDate = "lastRefreshDate"
         static let launchAtLogin = "launchAtLogin"
+        static let weeklyResetDayOfWeek = "weeklyResetDayOfWeek"
+        static let weeklyResetHour = "weeklyResetHour"
     }
 
     /// Load configuration from UserDefaults
@@ -140,6 +154,13 @@ final class UserDefaultsService {
             config.launchAtLogin = defaults.bool(forKey: Keys.launchAtLogin)
         }
 
+        if let day = defaults.object(forKey: Keys.weeklyResetDayOfWeek) as? Int {
+            config.weeklyResetDayOfWeek = day
+        }
+        if let hour = defaults.object(forKey: Keys.weeklyResetHour) as? Int {
+            config.weeklyResetHour = hour
+        }
+
         return config
     }
 
@@ -163,6 +184,8 @@ final class UserDefaultsService {
         }
 
         defaults.set(config.launchAtLogin, forKey: Keys.launchAtLogin)
+        defaults.set(config.weeklyResetDayOfWeek, forKey: Keys.weeklyResetDayOfWeek)
+        defaults.set(config.weeklyResetHour, forKey: Keys.weeklyResetHour)
     }
 
     /// Update last refresh date

@@ -85,6 +85,31 @@ struct SettingsWindowView: View {
                 Text("額外用量")
             }
 
+            // Weekly Reset Settings
+            Section {
+                Picker("每週重設日", selection: $viewModel.weeklyResetDayOfWeek) {
+                    Text("星期日").tag(1)
+                    Text("星期一").tag(2)
+                    Text("星期二").tag(3)
+                    Text("星期三").tag(4)
+                    Text("星期四").tag(5)
+                    Text("星期五").tag(6)
+                    Text("星期六").tag(7)
+                }
+
+                Picker("每週重設時間", selection: $viewModel.weeklyResetHour) {
+                    ForEach(0..<24, id: \.self) { hour in
+                        Text(String(format: "%02d:00", hour)).tag(hour)
+                    }
+                }
+
+                Text("對應 Claude 官方用量頁面的每週重設週期")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } header: {
+                Text("每週重設")
+            }
+
             // Display Options
             Section {
                 Picker("時間粒度", selection: $viewModel.selectedTimeGranularity) {
@@ -114,7 +139,7 @@ struct SettingsWindowView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 450, height: 560)
+        .frame(width: 450, height: 680)
         .alert("錯誤", isPresented: $viewModel.showError) {
             Button("確定") {
                 viewModel.showError = false
