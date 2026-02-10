@@ -136,7 +136,7 @@ struct UsageSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("今日用量")
+            Text("今日用量（UTC）")
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundColor(.secondary)

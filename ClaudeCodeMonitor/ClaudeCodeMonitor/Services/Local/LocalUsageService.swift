@@ -40,9 +40,10 @@ final class LocalUsageService {
         return aggregate(entries: entries)
     }
 
-    /// Read today's usage
+    /// Read today's usage (UTC day boundary, matching Anthropic's backend)
     func fetchTodayUsage() -> LocalUsageResult {
-        let calendar = Calendar.current
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
         let startOfDay = calendar.startOfDay(for: Date())
         return fetchUsage(from: startOfDay, to: Date())
     }

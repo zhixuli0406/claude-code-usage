@@ -150,7 +150,8 @@ struct ExtraUsageCard: View {
     }
 
     private var nextResetDate: String {
-        let calendar = Calendar.current
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
         let now = Date()
         var components = calendar.dateComponents([.year, .month], from: now)
         components.month! += 1
@@ -158,6 +159,7 @@ struct ExtraUsageCard: View {
         if let resetDate = calendar.date(from: components) {
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "zh-TW")
+            formatter.timeZone = TimeZone(identifier: "UTC")!
             formatter.dateFormat = "M 月 d 日"
             return formatter.string(from: resetDate)
         }
@@ -224,7 +226,7 @@ struct ExtraUsageCard: View {
 
                 Spacer()
 
-                Text("月額上限 · \(nextResetDate)重設")
+                Text("月額上限 · \(nextResetDate)重設 (UTC)")
                     .font(.caption2)
                     .foregroundColor(.secondary)
             }
