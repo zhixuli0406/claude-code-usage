@@ -13,11 +13,6 @@ struct CostDisplayCard: View {
         plan.estimatedDailyBudget
     }
 
-    /// Extra cost beyond the plan's included daily budget
-    private var dailyExtra: Decimal {
-        max(0, cost - dailyBudget)
-    }
-
     private var budgetFraction: Double {
         guard dailyBudget > 0 else { return 0 }
         return min(Double(truncating: (cost / dailyBudget) as NSDecimalNumber), 1.0)
@@ -83,17 +78,17 @@ struct CostDisplayCard: View {
                         color: plan.color
                     )
 
-                    // Weekly extra cost (only the part exceeding plan)
+                    // Projected weekly total cost
                     CostEstimateRow(
                         label: "本週預估",
-                        amount: dailyExtra * 7,
+                        amount: cost * 7,
                         color: .blue
                     )
 
-                    // Monthly extra cost (only the part exceeding plan)
+                    // Projected monthly total cost
                     CostEstimateRow(
                         label: "月度預估",
-                        amount: dailyExtra * 30,
+                        amount: cost * 30,
                         color: .purple
                     )
                 }

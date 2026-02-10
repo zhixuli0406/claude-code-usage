@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(swift build:*)",
+      "Bash(git -C /Users/lizhixu/Project/claude-code-usage status)",
+      "Bash(git -C /Users/lizhixu/Project/claude-code-usage add ClaudeCodeMonitor/ClaudeCodeMonitor/Models/Domain/PlanUsageLimits.swift ClaudeCodeMonitor/ClaudeCodeMonitor/Views/Components/PlanUsageLimitsCard.swift ClaudeCodeMonitor/ClaudeCodeMonitor/App/ClaudeCodeMonitorApp.swift ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Business/UsageMonitorService.swift ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Storage/UserDefaultsService.swift ClaudeCodeMonitor/ClaudeCodeMonitor/ViewModels/MenuBarViewModel.swift ClaudeCodeMonitor/ClaudeCodeMonitor/ViewModels/SettingsViewModel.swift ClaudeCodeMonitor/ClaudeCodeMonitor/Views/MenuBar/MenuBarContentView.swift ClaudeCodeMonitor/ClaudeCodeMonitor/Views/Settings/SettingsWindowView.swift)",
+      "Bash(git -C /Users/lizhixu/Project/claude-code-usage diff --cached --stat)",
+      "Bash(git -C /Users/lizhixu/Project/claude-code-usage commit -m \"feat: add plan usage limits tracking matching official Claude usage page\n\nAdd session \\(rolling 5h window\\), weekly \\(configurable reset day/hour\\),\nand monthly extra usage tracking with progress bars matching the\nofficial Claude usage page layout.\n\n- New PlanUsageLimits model with session, weekly, and extra usage info\n- New PlanUsageLimitsCard UI component with animated progress bars\n- UsageMonitorService computes limits from JSONL data with cost-based %\n- Weekly limits split into ''All models'' and ''Sonnet only'' categories\n- Settings: add weekly reset day/hour configuration \\(default: Tue 8:00\\)\n- SubscriptionPlan: add sessionBudget and weeklyBudget helpers\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\")",
+      "Bash(git -C /Users/lizhixu/Project/claude-code-usage push origin main)",
+      "Bash(git -C /Users/lizhixu/Project/claude-code-usage add ClaudeCodeMonitor/ClaudeCodeMonitor/Views/Components/PlanUsageLimitsCard.swift ClaudeCodeMonitor/ClaudeCodeMonitor/Views/MenuBar/MenuBarContentView.swift)",
+      "Bash(git -C /Users/lizhixu/Project/claude-code-usage commit -m \"feat: add settings gear button on weekly limits for quick reset time config\n\nAdd a gear icon button on the weekly limits section header in\nPlanUsageLimitsCard that opens the settings window directly,\nmaking it easy to configure the weekly reset day and hour.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\")"
+    ]
+  }
+}

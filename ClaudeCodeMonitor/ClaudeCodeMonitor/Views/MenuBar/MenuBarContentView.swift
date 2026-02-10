@@ -34,6 +34,9 @@ struct MenuBarContentView: View {
                     onOpenSettings: {
                         viewModel.openSettings()
                         openWindow(id: "settings")
+                    },
+                    onSetSessionReset: { date in
+                        viewModel.setSessionResetDate(date)
                     }
                 )
                     .opacity(contentAppeared ? 1 : 0)
@@ -145,6 +148,7 @@ struct UsageSection: View {
     let plan: SubscriptionPlan
     let planUsageLimits: PlanUsageLimits?
     var onOpenSettings: (() -> Void)? = nil
+    var onSetSessionReset: ((Date?) -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -154,7 +158,7 @@ struct UsageSection: View {
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)
-                PlanUsageLimitsCard(limits: limits, plan: plan, onOpenSettings: onOpenSettings)
+                PlanUsageLimitsCard(limits: limits, plan: plan, onOpenSettings: onOpenSettings, onSetSessionReset: onSetSessionReset)
             }
 
             Text("今日用量（UTC）")

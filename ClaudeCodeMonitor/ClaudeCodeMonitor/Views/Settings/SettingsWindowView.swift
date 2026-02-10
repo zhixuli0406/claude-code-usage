@@ -110,6 +110,30 @@ struct SettingsWindowView: View {
                 Text("每週重設")
             }
 
+            // Budget Calibration
+            Section {
+                BudgetRow(
+                    label: "工作階段 (5h)",
+                    placeholder: "$\(viewModel.subscriptionPlan.defaultSessionBudget as NSDecimalNumber)",
+                    text: $viewModel.sessionBudgetText
+                )
+                BudgetRow(
+                    label: "每週全模型",
+                    placeholder: "$\(viewModel.subscriptionPlan.defaultWeeklyAllModelsBudget as NSDecimalNumber)",
+                    text: $viewModel.weeklyAllModelsBudgetText
+                )
+                BudgetRow(
+                    label: "每週 Sonnet",
+                    placeholder: "$\(viewModel.subscriptionPlan.defaultWeeklySonnetBudget as NSDecimalNumber)",
+                    text: $viewModel.weeklySonnetBudgetText
+                )
+                Text("留空使用方案預設值；可參考官方用量頁面百分比來微調")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } header: {
+                Text("預算校正")
+            }
+
             // Display Options
             Section {
                 Picker("時間粒度", selection: $viewModel.selectedTimeGranularity) {
@@ -139,13 +163,32 @@ struct SettingsWindowView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 450, height: 680)
+        .frame(width: 450, height: 780)
         .alert("錯誤", isPresented: $viewModel.showError) {
             Button("確定") {
                 viewModel.showError = false
             }
         } message: {
             Text(viewModel.errorMessage ?? "未知錯誤")
+        }
+    }
+}
+
+/// A row for budget override input
+@available(macOS 14.0, *)
+struct BudgetRow: View {
+    let label: String
+    let placeholder: String
+    @Binding var text: String
+
+    var body: some View {
+        HStack {
+            Text(label)
+            Spacer()
+            TextField(placeholder, text: $text)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 100)
+                .multilineTextAlignment(.trailing)
         }
     }
 }

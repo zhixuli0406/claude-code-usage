@@ -15,8 +15,12 @@ struct PlanUsageLimitsCard: View {
     let limits: PlanUsageLimits
     let plan: SubscriptionPlan
     var onOpenSettings: (() -> Void)? = nil
+    var onSetSessionReset: ((Date?) -> Void)? = nil
 
     @State private var animateBars = false
+    @State private var showSessionResetPopover = false
+    @State private var sessionResetHours: Int = 5
+    @State private var sessionResetMinutes: Int = 0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -34,8 +38,27 @@ struct PlanUsageLimitsCard: View {
                         color: fractionColor(limits.session.usageFraction)
                     )
                 ],
-                animate: animateBars
+                animate: animateBars,
+                showSettingsButton: true,
+                onSettingsTap: { showSessionResetPopover = true }
             )
+            .popover(isPresented: $showSessionResetPopover, arrowEdge: .bottom) {
+                SessionResetPopover(
+                    hours: $sessionResetHours,
+                    minutes: $sessionResetMinutes,
+                    onApply: {
+                        let resetDate = Date().addingTimeInterval(
+                            Double(sessionResetHours) * 3600 + Double(sessionResetMinutes) * 60
+                        )
+                        onSetSessionReset?(resetDate)
+                        showSessionResetPopover = false
+                    },
+                    onReset: {
+                        onSetSessionReset?(nil)
+                        showSessionResetPopover = false
+                    }
+                )
+            }
 
             Divider()
 
@@ -252,5 +275,63 @@ struct ExtraUsageLimitBar: View {
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
         return formatter.string(from: nsNumber) ?? "0.00"
+    }
+}
+
+/// Popover for setting session reset remaining time
+@available(macOS 14.0, *)
+struct SessionResetPopover: View {
+    @Binding var hours: Int
+    @Binding var minutes: Int
+    let onApply: () -> Void
+    let onReset: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("設定工作階段剩餘時間")
+                .font(.subheadline)
+                .fontWeight(.medium)
+
+            Text("從官方 Claude 用量頁面查看剩餘時間後輸入")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+
+            HStack(spacing: 12) {
+                HStack(spacing: 4) {
+                    Stepper(value: $hours, in: 0...5) {
+                        Text("\(hours) 小時")
+                            .monospacedDigit()
+                            .frame(width: 50, alignment: .trailing)
+                    }
+                }
+
+                HStack(spacing: 4) {
+                    Stepper(value: $minutes, in: 0...59) {
+                        Text("\(minutes) 分")
+                            .monospacedDigit()
+                            .frame(width: 40, alignment: .trailing)
+                    }
+                }
+            }
+
+            HStack {
+                Button("自動偵測") {
+                    onReset()
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.secondary)
+                .font(.caption)
+
+                Spacer()
+
+                Button("套用") {
+                    onApply()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+            }
+        }
+        .padding(12)
+        .frame(width: 280)
     }
 }

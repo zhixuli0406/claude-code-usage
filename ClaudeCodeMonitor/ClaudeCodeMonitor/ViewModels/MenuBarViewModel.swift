@@ -71,6 +71,14 @@ final class MenuBarViewModel {
         await refreshScheduler.forceRefresh()
     }
 
+    /// Set session reset date (from user input of remaining time)
+    func setSessionResetDate(_ date: Date?) {
+        userDefaultsService.updateSessionResetDate(date)
+        Task {
+            await refresh()
+        }
+    }
+
     /// Open settings window
     func openSettings() {
         NSApp.activate(ignoringOtherApps: true)

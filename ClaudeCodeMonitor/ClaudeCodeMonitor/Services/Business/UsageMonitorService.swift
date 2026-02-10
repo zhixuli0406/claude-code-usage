@@ -106,16 +106,30 @@ final class UsageMonitorService {
         let weeklyResult = localUsageService.fetchUsage(from: weeklyStart, to: now)
         let nextWeeklyReset = weeklyStart.addingTimeInterval(7 * 24 * 3600)
 
-        // Session: filter from weekly entries (subset within last 5h)
-        let sessionStart = now.addingTimeInterval(-5 * 3600)
+        // Session: use configured reset date if valid, otherwise fall back to rolling 5h window
+        let sessionResetDate: Date
+        let sessionStart: Date
+        if let configuredReset = config.sessionResetDate, configuredReset > now {
+            // User has set a valid future reset date
+            sessionResetDate = configuredReset
+            sessionStart = configuredReset.addingTimeInterval(-5 * 3600)
+        } else {
+            // No configured date or expired: use rolling 5h window
+            sessionStart = now.addingTimeInterval(-5 * 3600)
+            sessionResetDate = now.addingTimeInterval(5 * 3600)
+        }
         let sessionEntries = weeklyResult.entries.filter { $0.timestamp >= sessionStart }
         let sessionCost = computeCostFromEntries(sessionEntries)
-        let sessionResetDate = now.addingTimeInterval(5 * 3600)
+
+        // Resolve budgets: user override > plan default
+        let sessionBudget = config.sessionBudgetOverride ?? plan.defaultSessionBudget
+        let weeklyAllBudget = config.weeklyAllModelsBudgetOverride ?? plan.defaultWeeklyAllModelsBudget
+        let weeklySonnetBudget = config.weeklySonnetBudgetOverride ?? plan.defaultWeeklySonnetBudget
 
         let sessionInfo = UsageLimitInfo(
             label: "目前工作階段",
             estimatedCost: sessionCost,
-            budget: plan.sessionBudget,
+            budget: sessionBudget,
             resetDescription: formatSessionReset(sessionResetDate, from: now),
             resetDate: sessionResetDate
         )
@@ -126,7 +140,7 @@ final class UsageMonitorService {
         let weeklyAllInfo = UsageLimitInfo(
             label: "所有模型",
             estimatedCost: weeklyAllCost,
-            budget: plan.weeklyBudget,
+            budget: weeklyAllBudget,
             resetDescription: formatWeeklyReset(nextWeeklyReset),
             resetDate: nextWeeklyReset
         )
@@ -138,7 +152,7 @@ final class UsageMonitorService {
         let weeklySonnetInfo = UsageLimitInfo(
             label: "僅 Sonnet",
             estimatedCost: sonnetCost,
-            budget: plan.weeklyBudget,
+            budget: weeklySonnetBudget,
             resetDescription: formatWeeklyReset(nextWeeklyReset),
             resetDate: nextWeeklyReset
         )

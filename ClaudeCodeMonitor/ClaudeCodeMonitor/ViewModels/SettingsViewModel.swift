@@ -16,6 +16,9 @@ final class SettingsViewModel {
     var subscriptionPlan: SubscriptionPlan = .pro
     var weeklyResetDayOfWeek: Int = 3
     var weeklyResetHour: Int = 8
+    var sessionBudgetText: String = ""
+    var weeklyAllModelsBudgetText: String = ""
+    var weeklySonnetBudgetText: String = ""
 
     var errorMessage: String?
     var showError = false
@@ -37,6 +40,20 @@ final class SettingsViewModel {
         subscriptionPlan = config.subscriptionPlan
         weeklyResetDayOfWeek = config.weeklyResetDayOfWeek
         weeklyResetHour = config.weeklyResetHour
+        sessionBudgetText = config.sessionBudgetOverride.map { formatBudget($0) } ?? ""
+        weeklyAllModelsBudgetText = config.weeklyAllModelsBudgetOverride.map { formatBudget($0) } ?? ""
+        weeklySonnetBudgetText = config.weeklySonnetBudgetOverride.map { formatBudget($0) } ?? ""
+    }
+
+    private func formatBudget(_ value: Decimal) -> String {
+        let nsNumber = NSDecimalNumber(decimal: value)
+        return NumberFormatter.localizedString(from: nsNumber, number: .decimal)
+    }
+
+    private func parseBudget(_ text: String) -> Decimal? {
+        let trimmed = text.trimmingCharacters(in: .whitespaces)
+        if trimmed.isEmpty { return nil }
+        return Decimal(string: trimmed)
     }
 
     /// Save settings
@@ -55,6 +72,9 @@ final class SettingsViewModel {
             config.subscriptionPlan = subscriptionPlan
             config.weeklyResetDayOfWeek = weeklyResetDayOfWeek
             config.weeklyResetHour = weeklyResetHour
+            config.sessionBudgetOverride = parseBudget(sessionBudgetText)
+            config.weeklyAllModelsBudgetOverride = parseBudget(weeklyAllModelsBudgetText)
+            config.weeklySonnetBudgetOverride = parseBudget(weeklySonnetBudgetText)
 
             userDefaultsService.saveConfiguration(config)
 

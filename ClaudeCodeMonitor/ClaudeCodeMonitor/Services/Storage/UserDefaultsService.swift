@@ -47,14 +47,41 @@ enum SubscriptionPlan: String, Codable, CaseIterable {
         }
     }
 
-    /// Budget for a rolling 5-hour session window
-    var sessionBudget: Decimal {
-        estimatedDailyBudget * 5 / 24
+    /// Default budget for a rolling 5-hour session window
+    /// Reverse-engineered from official usage page percentages
+    var defaultSessionBudget: Decimal {
+        switch self {
+        case .free: return 0
+        case .pro: return 13          // ~$13 per 5h window
+        case .max5x: return 65        // 5× Pro
+        case .max20x: return 260      // 20× Pro
+        case .team: return 13         // Pro-level
+        case .teamPremium: return 65  // 5× level
+        }
     }
 
-    /// Budget for a full week (7 days)
-    var weeklyBudget: Decimal {
-        estimatedDailyBudget * 7
+    /// Default budget for weekly all-models limit
+    var defaultWeeklyAllModelsBudget: Decimal {
+        switch self {
+        case .free: return 0
+        case .pro: return 76          // ~$76 per week
+        case .max5x: return 380       // 5× Pro
+        case .max20x: return 1520     // 20× Pro
+        case .team: return 76         // Pro-level
+        case .teamPremium: return 380 // 5× level
+        }
+    }
+
+    /// Default budget for weekly Sonnet-only limit
+    var defaultWeeklySonnetBudget: Decimal {
+        switch self {
+        case .free: return 0
+        case .pro: return 35          // ~$35 per week
+        case .max5x: return 175       // 5× Pro
+        case .max20x: return 700      // 20× Pro
+        case .team: return 35         // Pro-level
+        case .teamPremium: return 175 // 5× level
+        }
     }
 
     /// Accent color for the plan tier
@@ -82,6 +109,10 @@ struct AppConfiguration: Codable {
     var launchAtLogin: Bool = false
     var weeklyResetDayOfWeek: Int = 3  // 1=Sun, 2=Mon, 3=Tue, ..., 7=Sat
     var weeklyResetHour: Int = 8       // 0-23, default 8:00 AM
+    var sessionResetDate: Date?        // Absolute date when the 5-hour session resets (nil = auto)
+    var sessionBudgetOverride: Decimal?          // nil = use plan default
+    var weeklyAllModelsBudgetOverride: Decimal?  // nil = use plan default
+    var weeklySonnetBudgetOverride: Decimal?     // nil = use plan default
 }
 
 /// Time granularity for API queries
@@ -116,6 +147,10 @@ final class UserDefaultsService {
         static let launchAtLogin = "launchAtLogin"
         static let weeklyResetDayOfWeek = "weeklyResetDayOfWeek"
         static let weeklyResetHour = "weeklyResetHour"
+        static let sessionResetDate = "sessionResetDate"
+        static let sessionBudgetOverride = "sessionBudgetOverride"
+        static let weeklyAllModelsBudgetOverride = "weeklyAllModelsBudgetOverride"
+        static let weeklySonnetBudgetOverride = "weeklySonnetBudgetOverride"
     }
 
     /// Load configuration from UserDefaults
@@ -161,6 +196,20 @@ final class UserDefaultsService {
             config.weeklyResetHour = hour
         }
 
+        if let sessionReset = defaults.object(forKey: Keys.sessionResetDate) as? Date {
+            config.sessionResetDate = sessionReset
+        }
+
+        if let v = defaults.object(forKey: Keys.sessionBudgetOverride) as? NSDecimalNumber {
+            config.sessionBudgetOverride = v.decimalValue
+        }
+        if let v = defaults.object(forKey: Keys.weeklyAllModelsBudgetOverride) as? NSDecimalNumber {
+            config.weeklyAllModelsBudgetOverride = v.decimalValue
+        }
+        if let v = defaults.object(forKey: Keys.weeklySonnetBudgetOverride) as? NSDecimalNumber {
+            config.weeklySonnetBudgetOverride = v.decimalValue
+        }
+
         return config
     }
 
@@ -186,10 +235,37 @@ final class UserDefaultsService {
         defaults.set(config.launchAtLogin, forKey: Keys.launchAtLogin)
         defaults.set(config.weeklyResetDayOfWeek, forKey: Keys.weeklyResetDayOfWeek)
         defaults.set(config.weeklyResetHour, forKey: Keys.weeklyResetHour)
+
+        if let sessionReset = config.sessionResetDate {
+            defaults.set(sessionReset, forKey: Keys.sessionResetDate)
+        } else {
+            defaults.removeObject(forKey: Keys.sessionResetDate)
+        }
+
+        saveOptionalDecimal(config.sessionBudgetOverride, forKey: Keys.sessionBudgetOverride)
+        saveOptionalDecimal(config.weeklyAllModelsBudgetOverride, forKey: Keys.weeklyAllModelsBudgetOverride)
+        saveOptionalDecimal(config.weeklySonnetBudgetOverride, forKey: Keys.weeklySonnetBudgetOverride)
+    }
+
+    private func saveOptionalDecimal(_ value: Decimal?, forKey key: String) {
+        if let value = value {
+            defaults.set(NSDecimalNumber(decimal: value), forKey: key)
+        } else {
+            defaults.removeObject(forKey: key)
+        }
     }
 
     /// Update last refresh date
     func updateLastRefreshDate(_ date: Date) {
         defaults.set(date, forKey: Keys.lastRefreshDate)
+    }
+
+    /// Update session reset date (quick save without full config roundtrip)
+    func updateSessionResetDate(_ date: Date?) {
+        if let date = date {
+            defaults.set(date, forKey: Keys.sessionResetDate)
+        } else {
+            defaults.removeObject(forKey: Keys.sessionResetDate)
+        }
     }
 }
