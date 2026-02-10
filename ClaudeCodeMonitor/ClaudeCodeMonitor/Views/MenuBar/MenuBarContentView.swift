@@ -5,6 +5,7 @@ import SwiftUI
 struct MenuBarContentView: View {
     @Bindable var viewModel: MenuBarViewModel
     @State private var contentAppeared = false
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -25,7 +26,16 @@ struct MenuBarContentView: View {
                 ErrorView(error: error)
             } else if let usage = viewModel.currentUsage {
                 // Usage metrics with fade-in
-                UsageSection(usage: usage, monthlySpendingLimit: viewModel.monthlySpendingLimit, plan: viewModel.subscriptionPlan, planUsageLimits: viewModel.planUsageLimits)
+                UsageSection(
+                    usage: usage,
+                    monthlySpendingLimit: viewModel.monthlySpendingLimit,
+                    plan: viewModel.subscriptionPlan,
+                    planUsageLimits: viewModel.planUsageLimits,
+                    onOpenSettings: {
+                        viewModel.openSettings()
+                        openWindow(id: "settings")
+                    }
+                )
                     .opacity(contentAppeared ? 1 : 0)
                     .offset(y: contentAppeared ? 0 : 8)
                 Divider()
@@ -134,6 +144,7 @@ struct UsageSection: View {
     let monthlySpendingLimit: Decimal
     let plan: SubscriptionPlan
     let planUsageLimits: PlanUsageLimits?
+    var onOpenSettings: (() -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -143,7 +154,7 @@ struct UsageSection: View {
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)
-                PlanUsageLimitsCard(limits: limits, plan: plan)
+                PlanUsageLimitsCard(limits: limits, plan: plan, onOpenSettings: onOpenSettings)
             }
 
             Text("今日用量（UTC）")

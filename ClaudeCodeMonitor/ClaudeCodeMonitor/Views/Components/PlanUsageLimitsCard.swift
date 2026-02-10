@@ -14,6 +14,7 @@ struct LimitBarData {
 struct PlanUsageLimitsCard: View {
     let limits: PlanUsageLimits
     let plan: SubscriptionPlan
+    var onOpenSettings: (() -> Void)? = nil
 
     @State private var animateBars = false
 
@@ -59,7 +60,9 @@ struct PlanUsageLimitsCard: View {
                         color: fractionColor(limits.weeklySonnetOnly.usageFraction)
                     )
                 ],
-                animate: animateBars
+                animate: animateBars,
+                showSettingsButton: true,
+                onSettingsTap: onOpenSettings
             )
 
             Divider()
@@ -92,6 +95,8 @@ struct LimitSection: View {
     let iconColor: Color
     let items: [LimitBarData]
     let animate: Bool
+    var showSettingsButton: Bool = false
+    var onSettingsTap: (() -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -102,6 +107,16 @@ struct LimitSection: View {
                 Text(title)
                     .font(.subheadline)
                     .fontWeight(.medium)
+                Spacer()
+                if showSettingsButton {
+                    Button(action: { onSettingsTap?() }) {
+                        Image(systemName: "gear")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help("設定重設時間")
+                }
             }
 
             ForEach(Array(items.enumerated()), id: \.offset) { _, item in
