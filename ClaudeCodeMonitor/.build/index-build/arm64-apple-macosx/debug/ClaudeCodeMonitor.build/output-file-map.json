@@ -1,0 +1,159 @@
+{
+  "": {
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/master.swiftdeps"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/App/ClaudeCodeMonitorApp.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/ClaudeCodeMonitorApp.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/ClaudeCodeMonitorApp.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/ClaudeCodeMonitorApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/ClaudeCodeMonitorApp.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/ClaudeCodeMonitorApp.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Models/API/APIError.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/APIError.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/APIError.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/APIError~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/APIError.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/APIError.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Models/API/AnalyticsResponse.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsResponse.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsResponse.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsResponse~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsResponse.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsResponse.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Models/API/UsageReportResponse.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageReportResponse.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageReportResponse.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageReportResponse~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageReportResponse.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageReportResponse.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Models/Domain/UsageMetrics.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMetrics.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMetrics.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMetrics~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMetrics.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMetrics.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Business/CostCalculationService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostCalculationService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostCalculationService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostCalculationService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostCalculationService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostCalculationService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Business/RefreshScheduler.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/RefreshScheduler.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/RefreshScheduler.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/RefreshScheduler~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/RefreshScheduler.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/RefreshScheduler.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Business/UsageMonitorService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMonitorService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMonitorService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMonitorService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMonitorService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageMonitorService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Local/LocalUsageService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LocalUsageService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LocalUsageService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LocalUsageService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LocalUsageService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LocalUsageService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Network/AnalyticsAPIService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsAPIService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsAPIService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsAPIService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsAPIService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnalyticsAPIService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Network/AnthropicAPIClient.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnthropicAPIClient.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnthropicAPIClient.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnthropicAPIClient~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnthropicAPIClient.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/AnthropicAPIClient.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Network/UsageAPIService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageAPIService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageAPIService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageAPIService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageAPIService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UsageAPIService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Storage/CacheService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CacheService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CacheService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CacheService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CacheService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CacheService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Storage/KeychainService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/KeychainService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/KeychainService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/KeychainService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/KeychainService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/KeychainService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Storage/LaunchAtLoginService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LaunchAtLoginService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LaunchAtLoginService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LaunchAtLoginService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LaunchAtLoginService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/LaunchAtLoginService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Services/Storage/UserDefaultsService.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UserDefaultsService.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UserDefaultsService.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UserDefaultsService~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UserDefaultsService.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/UserDefaultsService.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/ViewModels/MenuBarViewModel.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarViewModel.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarViewModel.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarViewModel~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarViewModel.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarViewModel.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/ViewModels/SettingsViewModel.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsViewModel.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsViewModel.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsViewModel~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsViewModel.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsViewModel.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Views/Components/CostDisplayCard.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostDisplayCard.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostDisplayCard.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostDisplayCard~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostDisplayCard.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/CostDisplayCard.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Views/Components/TokenUsageCard.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/TokenUsageCard.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/TokenUsageCard.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/TokenUsageCard~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/TokenUsageCard.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/TokenUsageCard.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Views/MenuBar/MenuBarContentView.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarContentView.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarContentView.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarContentView.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/MenuBarContentView.dia"
+  },
+  "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/ClaudeCodeMonitor/Views/Settings/SettingsWindowView.swift": {
+    "dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsWindowView.d",
+    "object": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsWindowView.swift.o",
+    "swiftmodule": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsWindowView~partial.swiftmodule",
+    "swift-dependencies": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsWindowView.swiftdeps",
+    "diagnostics": "/Users/lizhixu/Project/claude-code-usage/ClaudeCodeMonitor/.build/index-build/arm64-apple-macosx/debug/ClaudeCodeMonitor.build/SettingsWindowView.dia"
+  }
+}
