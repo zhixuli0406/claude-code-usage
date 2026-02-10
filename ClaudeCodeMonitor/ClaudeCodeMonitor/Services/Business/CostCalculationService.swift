@@ -98,10 +98,52 @@ final class CostCalculationService {
         return pricingTable["claude-sonnet-4-5"]!
     }
 
+    // MARK: - Usage Weight Pricing
+    // Anthropic's plan usage limits are calculated using internal compute costs,
+    // which differ from public API pricing. Opus 4.5+ API price was reduced from
+    // $15/$75 to $5/$25, but plan usage still reflects the higher compute cost.
+    // Reference: https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor
+    private let usageWeightPricing: [String: ModelPricing] = [
+        "claude-opus-4-6": ModelPricing(
+            inputPerMTok: 15.00, outputPerMTok: 75.00,
+            cacheWritePerMTok: 18.75, cacheReadPerMTok: 1.50
+        ),
+        "claude-opus-4-5": ModelPricing(
+            inputPerMTok: 15.00, outputPerMTok: 75.00,
+            cacheWritePerMTok: 18.75, cacheReadPerMTok: 1.50
+        ),
+    ]
+
+    /// Resolve usage-weight pricing (for plan limit percentage calculation)
+    private func resolveUsageWeightPricing(for model: String) -> ModelPricing {
+        // Check usage weight overrides first
+        if let exact = usageWeightPricing[model] {
+            return exact
+        }
+        for (key, pricing) in usageWeightPricing where model.hasPrefix(key) {
+            return pricing
+        }
+        let lowercased = model.lowercased()
+        if lowercased.contains("opus") {
+            return usageWeightPricing["claude-opus-4-6"]!
+        }
+        // For non-Opus models, API pricing ≈ compute cost
+        return resolvePricing(for: model)
+    }
+
     /// Calculate cost for given model and tokens
     func calculateCost(model: String, tokens: TokenBreakdown) -> Decimal {
         let pricing = resolvePricing(for: model)
+        return computeCostWithPricing(pricing, tokens: tokens)
+    }
 
+    /// Calculate usage weight for plan limit percentages (uses internal compute cost rates)
+    func calculateUsageWeight(model: String, tokens: TokenBreakdown) -> Decimal {
+        let pricing = resolveUsageWeightPricing(for: model)
+        return computeCostWithPricing(pricing, tokens: tokens)
+    }
+
+    private func computeCostWithPricing(_ pricing: ModelPricing, tokens: TokenBreakdown) -> Decimal {
         let inputCost = Decimal(tokens.uncachedInput) * pricing.inputPerMTok / 1_000_000
         let outputCost = Decimal(tokens.output) * pricing.outputPerMTok / 1_000_000
         let cacheWriteCost = Decimal(tokens.cacheCreation) * pricing.cacheWritePerMTok / 1_000_000

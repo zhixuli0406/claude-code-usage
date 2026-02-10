@@ -114,7 +114,8 @@ final class UsageMonitorService {
             sessionResetDate = now.addingTimeInterval(5 * 3600)
         }
         let sessionEntries = weeklyResult.entries.filter { $0.timestamp >= sessionStart }
-        let sessionCost = computeCostFromEntries(sessionEntries)
+        // Use weighted cost (internal compute rates) for plan limit percentages
+        let sessionWeightedCost = computeWeightedCostFromEntries(sessionEntries)
 
         // Resolve budgets: user override > plan default
         let sessionBudget = config.sessionBudgetOverride ?? plan.defaultSessionBudget
@@ -123,26 +124,26 @@ final class UsageMonitorService {
 
         let sessionInfo = UsageLimitInfo(
             label: "目前工作階段",
-            estimatedCost: sessionCost,
+            estimatedCost: sessionWeightedCost,
             budget: sessionBudget,
             resetDescription: formatSessionReset(sessionResetDate, from: now),
             resetDate: sessionResetDate
         )
 
-        // Weekly all models
-        let weeklyAllCost = computeCost(from: weeklyResult)
+        // Weekly all models (weighted cost)
+        let weeklyAllWeightedCost = computeWeightedCostFromEntries(weeklyResult.entries)
 
         let weeklyAllInfo = UsageLimitInfo(
             label: "所有模型",
-            estimatedCost: weeklyAllCost,
+            estimatedCost: weeklyAllWeightedCost,
             budget: weeklyAllBudget,
             resetDescription: formatWeeklyReset(nextWeeklyReset),
             resetDate: nextWeeklyReset
         )
 
-        // Weekly Sonnet only
+        // Weekly Sonnet only (no weighting needed — Sonnet compute cost ≈ API price)
         let sonnetEntries = weeklyResult.entries.filter { $0.model.contains("sonnet") }
-        let sonnetCost = computeCostFromEntries(sonnetEntries)
+        let sonnetCost = computeWeightedCostFromEntries(sonnetEntries)
 
         let weeklySonnetInfo = UsageLimitInfo(
             label: "僅 Sonnet",
@@ -179,6 +180,28 @@ final class UsageMonitorService {
 
     private func computeCost(from result: LocalUsageResult) -> Decimal {
         return computeCostFromEntries(result.entries)
+    }
+
+    /// Compute weighted cost using internal compute rates (for plan usage limit percentages).
+    /// Always calculates from tokens — ignores JSONL costUSD since those reflect API pricing.
+    private func computeWeightedCostFromEntries(_ entries: [LocalUsageEntry]) -> Decimal {
+        var modelBreakdown: [String: TokenBreakdown] = [:]
+        for entry in entries {
+            let existing = modelBreakdown[entry.model] ?? TokenBreakdown(
+                uncachedInput: 0, cachedInput: 0, cacheCreation: 0, output: 0
+            )
+            modelBreakdown[entry.model] = TokenBreakdown(
+                uncachedInput: existing.uncachedInput + entry.inputTokens,
+                cachedInput: existing.cachedInput + entry.cacheReadInputTokens,
+                cacheCreation: existing.cacheCreation + entry.cacheCreationInputTokens,
+                output: existing.output + entry.outputTokens
+            )
+        }
+        var total: Decimal = 0
+        for (model, tokens) in modelBreakdown {
+            total += costCalculationService.calculateUsageWeight(model: model, tokens: tokens)
+        }
+        return total
     }
 
     private func computeCostFromEntries(_ entries: [LocalUsageEntry]) -> Decimal {

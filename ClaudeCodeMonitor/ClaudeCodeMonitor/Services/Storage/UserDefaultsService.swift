@@ -47,40 +47,40 @@ enum SubscriptionPlan: String, Codable, CaseIterable {
         }
     }
 
-    /// Default budget for a rolling 5-hour session window
-    /// Reverse-engineered from official usage page percentages
+    /// Default budget for a rolling 5-hour session window (at internal compute cost rates)
+    /// Calibrated against official Claude usage page percentages
     var defaultSessionBudget: Decimal {
         switch self {
         case .free: return 0
-        case .pro: return 13          // ~$13 per 5h window
-        case .max5x: return 65        // 5× Pro
-        case .max20x: return 260      // 20× Pro
-        case .team: return 13         // Pro-level
-        case .teamPremium: return 65  // 5× level
+        case .pro: return 8           // ~$8 per 5h window (compute cost)
+        case .max5x: return 40        // 5× Pro
+        case .max20x: return 160      // 20× Pro
+        case .team: return 8          // Pro-level
+        case .teamPremium: return 40  // 5× level
         }
     }
 
-    /// Default budget for weekly all-models limit
+    /// Default budget for weekly all-models limit (at internal compute cost rates)
     var defaultWeeklyAllModelsBudget: Decimal {
         switch self {
         case .free: return 0
-        case .pro: return 76          // ~$76 per week
-        case .max5x: return 380       // 5× Pro
-        case .max20x: return 1520     // 20× Pro
-        case .team: return 76         // Pro-level
-        case .teamPremium: return 380 // 5× level
+        case .pro: return 85          // ~$85 per week (compute cost)
+        case .max5x: return 425       // 5× Pro
+        case .max20x: return 1700     // 20× Pro
+        case .team: return 85         // Pro-level
+        case .teamPremium: return 425 // 5× level
         }
     }
 
-    /// Default budget for weekly Sonnet-only limit
+    /// Default budget for weekly Sonnet-only limit (at internal compute cost rates)
     var defaultWeeklySonnetBudget: Decimal {
         switch self {
         case .free: return 0
-        case .pro: return 35          // ~$35 per week
-        case .max5x: return 175       // 5× Pro
-        case .max20x: return 700      // 20× Pro
-        case .team: return 35         // Pro-level
-        case .teamPremium: return 175 // 5× level
+        case .pro: return 10          // ~$10 per week (compute cost)
+        case .max5x: return 50        // 5× Pro
+        case .max20x: return 200      // 20× Pro
+        case .team: return 10         // Pro-level
+        case .teamPremium: return 50  // 5× level
         }
     }
 
